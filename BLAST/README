@@ -1,0 +1,22 @@
+Rattus Norvegicus 
+=================
+
+Sequence files and rat ESTs with BLAST
+--------------------------------------
+
+1. Get fasta nucleic acid (fna) FASTA formatted sequence files for Rattus Norvegicus
+
+wget ftp://ftp.ncbi.nih.gov/refseq/R_norvegicus/mRNA_Prot/rat.1.rna.fna.gz
+
+gunzip rat.1.rna.fna.gz
+
+formatdb -i rat.1.rna.fna -p F -o T
+
+2. Get the Express Sequence Tags, a short sub-sequence of cDNA sequence used to identify gene transcripts, used for gene discovery and gene-sequence determination
+
+wget http://mirrors.vbi.vt.edu/mirrors/ftp.ncbi.nih.gov/genomes/Rattus_norvegicus/ARCHIVE/2002/rn_est.gz
+
+gunzip rn_est
+
+3. Run Slurm script to BLAST
+

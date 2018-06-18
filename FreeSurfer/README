@@ -1,0 +1,28 @@
+We don't have the complete set of libraries installed (yet) on the compute nodes for FreeSurfer visualisation. In the meantime, short visualisation sessions can be conducted on the login node. As always, it is better to do visualisation locally and computation on the cluster.
+
+The following is an example session for visualisation.
+
+[lev@cricetomys HPCshells]$ ssh spartan -Y
+..
+[lev@spartan ~]$ module load FreeSurfer/6.0.0-GCC-4.9.2-centos6_x86_64
+[lev@spartan ~]$ module load X11/20160819-GCC-4.9.2
+[lev@spartan ~]$ export TUTORIAL_DATA=/usr/local/common/FreeSurfer
+[lev@spartan ~]$ export SUBJECTS_DIR=$TUTORIAL_DATA/buckner_data/tutorial_subjs
+[lev@spartan ~]$ cd $SUBJECTS_DIR
+[lev@spartan ~]$ freeview -v \
+good_output/mri/T1.mgz \
+good_output/mri/wm.mgz \
+good_output/mri/brainmask.mgz \
+good_output/mri/aseg.mgz:colormap=lut:opacity=0.2 \
+-f good_output/surf/lh.white:edgecolor=blue \
+good_output/surf/lh.pial:edgecolor=red \
+good_output/surf/rh.white:edgecolor=blue \
+good_output/surf/rh.pial:edgecolor=red
+
+See more here to continue the tutorial:
+
+https://surfer.nmr.mgh.harvard.edu/fswiki/FsTutorial/OutputData_freeview
+
+
+
+

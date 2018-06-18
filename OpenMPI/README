@@ -1,0 +1,20 @@
+# A number of these examples come from Lev Lafayette, Sequential and Parallel Programming with C and Fortran, VPAC, 2015-2016, ISBN 978-0-9943373-1-3
+
+module load OpenMPI/1.10.2-GCC-4.9.2
+mpicc mpi-helloworld.c -o mpi-helloworld
+sbatch mpi-helloworld.slurm
+
+mpif90 mpi-helloworld.f90 -o mpi-helloworld
+sbatch mpi-helloworld.slurm
+
+mpicc mpi-ping.c -o mpi-ping
+sbatch mpi-ping.slurm
+
+mpicc mpi-sendrecv.c -o mpi-sendrecv
+sbatch mpi-sendrecv.slurm
+
+mpif90 mpi-sendrecv.f90 -o mpi-sendrecv
+sbatch mpi-sendrecv.slurm
+
+mpicc mpi-pingpong.c -o mpi-pingpong
+sbatch mpi-pingpong.slurm

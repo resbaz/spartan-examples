@@ -1,0 +1,7 @@
+SPSS is a fully graphical application with no command line variant, and the client is not really intended to be used on a cluster. 
+
+If you want to use SPSS on Spartan, you'll need to give it some way of displaying its interface (i.e. via X11). 
+You'll also need to ensure you are correctly using compute resources as simply running the client will execute it on the login node and this carries a risk of having jobs terminated without warning. You will need to run in an interactive slurm session to avoid this.
+
+For information on setting up and connecting with an X11 Display connection, see /usr/local/common/X11/README
+For information on initiating an interactive Slurm session, see /usr/local/common/interact/README

@@ -1,0 +1,7 @@
+This is a simple demo showing how to use Singularity (http://singularity.lbl.gov/), a framework for running containerised applications on HPC.
+
+Containers allow you to have control over your operating environment, and to package everything up in one package that will run anywhere (within reason). This is great for reproducibility and sharing.
+
+The demo loads Singularity, runs a simple command to print to standard output, and capture this to a file.
+
+Check out the Singularity docs for more information on use cases, connecting your data, and hardware access (including GPU).

@@ -1,0 +1,5 @@
+# Gurobi is licensed software. The following needs to be included in a user's .bbash_profile in order for it to access tokens.
+
+export GRB_LICENSE_FILE=/usr/local/easybuild/software/Gurobi/gurobi.lic
+
+

@@ -1,0 +1,12 @@
+It is not highly recommended, but if a user wants to do X-Windows forwarding with MATLAB, it can be done.
+
+If the user is not using a Linux local machine they will need to install an X-windows client, such as Xming for MS-Windows or X11 on Mac OSX from the XQuartz project.
+
+ssh <username>@spartan.hpc.unimelb.edu.au -Y
+sinteractive -p cloud --x11=first
+module load MATLAB/2017a
+matlab
+
+.... and wait!
+
+When the MATLAB window finally appears, you can type in commands as usual. As a test, try typing in the polarplot.m commands.

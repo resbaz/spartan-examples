@@ -1,0 +1,69 @@
+# Don't do this on the head node.
+# Many of these examples are from Lev Lafayette, Sequential and Parallel Programming with C and Fortran, VPAC, 2015-2016, ISBN 978-0-9943373-1-3,  https://github.com/VPAC/seqpar 
+
+
+sinteractive --time=6:00:00
+
+module load GCC/4.9.2
+
+# Compile with OpenMP directives e.g., 
+gcc -fopenmp helloomp.c -o helloompc
+gfortran -fopenmp helloomp.f90 -o helloompf
+
+# Export with the number of threads desired
+export OMP_NUM_THREADS=8
+
+# Execute the programs
+
+./helloompc
+./helloompf
+
+# The same variable name can have different values with the parallel section and outside it.
+
+gcc -fopenmp sharedhello.c -o sharedhelloompc
+gfortran -fopenmp sharedhello.f90 -o sharedhelloompf
+
+./sharedhelloompc
+./sharedhelloompf
+
+# Internal control variables and their interactions with runtime library routines are illustrated by the examples icv1.f90 and icv1.c. 
+# Four ICV's - nest-var, mex-active-levels-var, dyn-var, and nthreads-var - are modified by calls their respective library routines (omp_set_nested(), omp_set_max_active_levels(), omp_set_dynamic(), and omp_set_num_threads()).
+
+gcc -fopenmp icv1.c -o icv1c
+gfortran -fopenmp icv1.f90 -o icv1f
+
+./icv1c
+./icv1f
+
+# One of the most typical applications is the parallelisation of loops. This includes a worksharing construct, which distributes the execution of the parallel region among the thread team members. There is an implicit barrier at the end of a loop construct, unless a `nowait` clause has been stated. Loop iteration variables are private by default. 
+
+gcc -fopenmp hello1millomp.c -o hello1millc
+gfortran -fopenmp hello1millomp.f90 -o hello1millf
+
+./hello1millc
+./hello1millf
+
+# The simd construct is usually more efficient
+
+gfortran -fopenmp hello1millsimd.f90 -o hello1millsimdf
+gcc -fopenmp hello1millsimd.c -o hello1millsimdc
+
+./hello1millsimdf
+./hello1millsimdc
+
+# The sections construct distributes threads among structured blocks
+
+gfortran -fopenmp hello3versomp.f90 -o hello3versompf
+gcc -fopenmp hello3versomp.c -o hello3versompc
+
+./hello3versompf
+./hello3versompc
+
+#  The `task` constructs are very useful to mosty efficiently implement parallelism. The general principle is that a thread generates tasks which are then executed according to the runtime system, either immediately or delayed.
+
+gfortran -fopenmp colourless-3.f90 -o colourless-3f
+gcc -fopenmp colourless-3.c -o colourless-3c
+
+./colourless-3f
+./colourless-3c
+

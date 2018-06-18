@@ -1,0 +1,133 @@
+Last Updated - 2018-02-26
+
+This is a collection of sample test jobs for Spartan, written with SLURM for job submission, across various applications, and also with small sample MPI and OpenMP programs.
+
+
+
+
+** HOW TO EXECUTE JOBS **
+
+Executing a job on the cluster involves submitting a slurm job request script using the `sbatch` command, or by attaching your terminal session to a compute node directly by using the `sinteractive` command. Both of these commands, and the sbatch scripts used to define a job request accept a list of flags that can be seen by doing `sbatch --help`.
+
+Functionally, this works by creating a new user session on a compute node (or in the case of an interactive job, connecting your current session to a compute node).
+
+The compute nodes on Spartan are divided into partitions based on their intended use. This also influences the type of hardware we employ. Each node in a partition has the same amount of CPUs and RAM. Configurations are as follows:
+
+	cloud - 8 CPU - 64GB RAM - Intended for single node calculations of any type, or loosely coupled multi-node applications. Cloud nodes, 1:1 (non-oversubscribed) vCPUs. No fast interconnect, standard TCP networking.
+
+	physical - 12 CPU - 256GB RAM - Intended for MPI multi-node calculations. Fast interconnect.
+
+	bigmem - 32 CPU - 1.5TB RAM - Intended for single node operations that require a large amount of RAM but cannot easily be distributed over multiple nodes.
+
+	gpu - 12 CPU - 256GB RAM - NVidia k80 GPUs - Intended for CUDA 7, 7.5 & 8 applications.
+
+Note there are several queues that are accessible only to specific project groups.
+
+
+
+
+** HOW TO LOAD SOFTWARE **
+
+We use LMod to manage existing software installations. Because Spartan is a general purpose HPC cluster with variying requirements and uses we sometimes need to make different versions of the same software package available, and we need to segregate them so they don't interfere with each other. 
+This is particularly true of applications that are a language in their own right (e.g. Python, R, Matlab) or that need to be matched to those types of applications (e.g. Tensorflow needs to be compiled against a specific Python version, which then needs to be loaded alongside it when it is used).
+LMod allows us to assert that certain modules are necessary to make other modules run, and then load them automatically. As such, you can (in almost all standard cases) simply load the application you wish to use and all required components will be loaded as part of that.
+
+Typing `module avail` will show a complete list of currently installed software. You can do a simple search with this command by adding the search term to the end (e.g. `module avail Tensorflow`), or can do basic regex searches with the '-r' flag (e.g. `module -r avail '^Python'`).
+
+Typing `module list` will show a complete list of software currently loaded into your user environment. We load a few little modules into your environment when you log in by default, none of these are specifically necessary to use the cluster.
+
+You can use `module purge` to remove all currently loaded modules from your environment, and (of course), `module load packagename/version` to load a specific module. 
+
+Looking at the names of modules, we can see they have two parts: The package name and a version number and toolchain, sometimes with additional details... but these can be confusing when you're not used to interpreting them.
+
+Here's several examples of existing packages, each with slighty more complexity than the last:
+
+    GCC/6.2.0 - GNU Compiler suite, version 6.2.0. The lack of any other designation after the version number marks this as either a binary (i.e. built and distributed externally) or a Toolchain. Those of you already tasked with writing and building C or Fortran code will almost certainly recognise this.
+
+   intel/2016.u3 - the Intel Compiler suite, version 2016, update 3. A toolchain that we have used to build a large amount of software over the last few years. The Intel Compiler Suite is a set of highly optimised code additions that work alongside the GCC compiler suite (if you use `module list` after loading this module, you will see that it also loads GCC/4.9.2 automatically), but also contains Intel's MPI and specialised Math libraries. This is a simple example of a 'bundle' module, which exists to load subcomponents (e.g. icc, ifort, impi, imkl).
+
+    FFTW/3.3.4-GCC-6.2.0 - The FFTW fourier transform library, version 3.3.4, built with GCC-6.2.0. A math library we use as an underlying dependency to build higher level applications. You can also utilize these if you are building software, but must remember to load them before the build and then before you attempt to use the software.
+
+   NAMD/2.12-intel-2017.u2-mpi-CUDA - NAMD Scalable Molecular Dynamics Simulator, version 2.12, built with the Intel Compiler Suite, 2017 version, update 2. Note the extra suffixes on this toolchain version... these indicate that specific flags were used in the build. This particular version has MPI specifically enabled (for multi-node jobs) and can utilize some version of CUDA. 
+
+   Tensorflow/1.4.0-intel-2017.u2-GCC-5.4.0-CUDA8-Python-3.5.2-GPU - Tensorflow 1.4.0 built for Python 2.5.2 using a toolchain comprising of the Intel Compiler Suite 2017 update 2, GCC 5.4.0 and CUDA v8. It has a flag to show it has been built with specific build settings enabling gpu usage, though that's perhaps a little redundant here. 
+
+You can see some details about most modules by doing `module whatis packagename`, and can see more details about what the module does when it loads (particularly, what paths and environmental variables it adds) by doing `module show packagename`.
+
+Note that it is important that toolchains align. If you load several modules in sequence and see modules
+being changed in the process it's possible you'll see a conflict at runtime... Different compilers can build the same applications with different features, and different versions of libraries can perform tasks in different ways which can mess with the way those libraries interface with the program that's using them.
+
+Additionally, some toolchains are built with specific goals in mind. Most notably, the CUDA suffixed toolchains (e.g. intel-2017.u2-GCC-5.4.0-CUDA8) are intended for use on the GPGPU parititon and are built with the specific settings required by the hardware present in those partitions.
+
+
+
+** USEFUL COMMANDS **
+
+Slurm comes packaged with the following command line tools, all of which have their own flags and options. You can see information on the usage of each by adding ' --help' to each.
+
+`sinfo` - Show all Slurm queues & summarise the states of nodes in them. This is useful for determining how busy the cluster currently is. Note that some queues are restricted.
+
+`squeue` - Show all currently executing and pending jobs (for all users)  and their current states.
+
+`sacct` - Report data on running and completed jobs. Note that, by default, searches start from 00:00:00 on the current day. To view older jobs you will need to use the -S flag and specify a date. 
+
+`sstat` - Show the run status of a currently running job. 
+
+`scancel` - Cancel a queued job. Of course, you will only be able to cancel jobs you have permission to control.
+
+`scontrol` - A general, but more complex tool. Can perform many functions of the above commands from a single tool. Some useful subcommands of scontrol are `scontrol hold` and `scontrol resume` which will allow you to prevent a job from starting and release said job to allow it to start respectively. Note that many of scontrol's capabilities are also permission-locked.
+
+
+
+
+
+** TASK AND APPLICATION SPECIFIC EXAMPLES **
+
+Each directory contains examples of submission scripts and/or relevant input for a specific set of tasks or a commonly used application. Here is a list of directories and their contents:
+
+array/ - example array batch jobs, using Slurm's Job Array functionality.
+
+BLAST/ - example submission script and input data for RNA/DNA alignment using BLAST
+
+depend/ - example scripts featuring Slurm's dependency functionality, allowing for automation flow control and conditional execution based on prior job results.
+
+FDS/ - example submission script for FDS - Fire Dynamics Simulator
+
+FreeSurfer/ - example scripts and input for FreeSurfer MRI toolkit
+
+FSL/ - example scripts and input files for the FMRIB Software Library (FSL)
+
+Gaussian/ - example scripts and input for Gaussian/G09 (and other iterations)
+  
+GPU/ - example submissions scripts, CUDA code and compiled CUDA enabled executables.
+
+GROMACS/ - example input for GROningen MAchine for Chemical Simulations (GROMACS). Scripts pending.
+
+Gurobi/ - License information for Gurobi optimization toolkit
+
+HPCshells/ - A variety of shell scripting examples for those looking to learn new tricks. Course material for our HPC Shells course.
+
+interact/ - A quick guide on invoking interactive sessions using the sinteractive command
+
+IntroLinux/ - Course material from our introductory linux shells course
+
+MATLAB/ - example scripts and input files for simple single node Matlab jobs.
+
+NAMD/ - simple example scripts for basic NAMD jobs. MPI & CUDA enabled job guides pending.
+
+Octave/ - example scripts and code for GNU Octave.
+
+OpenMP/ - example code for OpenMP local multicore applications
+
+OpenMPI/ - example code and submission scripts for OpenMPI multi-node applications
+
+ORCA/ - example scripts and inputs for the ORCA ab initio quantum chemistry package
+
+Python/ - example code and scripts for using Python on the cluster, including MPI4py
+
+Qchem/ - example submissions script for Qchem Quantum Chemistry Package
+
+R/ - example code and submissions scripts for using R on the cluster. 
+
+Singularity/ - example submission script and machine image for Singularity container system.
+

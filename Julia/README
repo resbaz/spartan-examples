@@ -1,0 +1,59 @@
+Julia is a high-level, high-performance dynamic programming language for technical computing. Homepage: http://julialang.org/
+
+A simple example is provided of a Slurm script which reads in a Julia file (simple.jl).
+
+Julia users sometimes require additional packages to be installed. Unfortunately these are not available system-wide, but rather have to be installed in each user's home directory. This is a multiple-step process, which requires downloading the metadata, followed by the packages required. For example:
+
+
+[lev@spartan ~]$ module load Julia/0.6.0-binary
+[lev@spartan ~]$ julia
+julia> Pkg.add("JuMP")
+INFO: Initializing package repository /home/lev/.julia/v0.6
+INFO: Cloning METADATA from https://github.com/JuliaLang/METADATA.jl
+....
+
+And that takes a while - as the feedback says it copies the metadata for *every* package and *every* version in your home directory. e.g.,
+
+[lev@spartan ~]$ cd /home/lev/.julia/v0.6/tmpC5OSJ4/METADATA
+[lev@spartan METADATA]$ ls
+AbaqusReader                      ExpressionPatterns
+AbbrvKW                           ExpressionUtils
+AbstractAlgebra                   ExprOptimization
+AbstractDomains                   ExprRules
+AbstractFFTs                      ExtensibleScheduler
+AbstractNumbers                   Extern
+AbstractOperators                 ExtractMacro
+AbstractTables                    ExtremelyRandomizedTrees
+AbstractTrees                     ExtremeStats
+Accumulo                          EzXML
+...
+
+julia> Pkg.status()
+INFO: Initializing package repository /home/lev/.julia/v0.6
+INFO: Cloning METADATA from https://github.com/JuliaLang/METADATA.jl
+No packages installed
+
+julia> Pkg.add("JuMP")
+INFO: Cloning cache of BinDeps from https://github.com/JuliaLang/BinDeps.jl.git
+INFO: Cloning cache of Calculus from https://github.com/JuliaMath/Calculus.jl.git
+....
+INFO: Installing BinDeps v0.8.8
+INFO: Installing Calculus v0.4.0
+INFO: Installing CommonSubexpressions v0.1.0
+INFO: Installing Compat v0.65.1
+INFO: Installing DataStructures v0.8.3
+INFO: Installing DiffResults v0.0.3
+INFO: Installing DiffRules v0.0.4
+INFO: Installing ForwardDiff v0.7.5
+INFO: Installing JuMP v0.18.1
+INFO: Installing MathProgBase v0.7.1
+INFO: Installing NaNMath v0.3.1
+INFO: Installing ReverseDiffSparse v0.8.1
+INFO: Installing SHA v0.5.7
+INFO: Installing SpecialFunctions v0.4.0
+INFO: Installing StaticArrays v0.7.0
+INFO: Installing URIParser v0.3.1
+INFO: Building SpecialFunctions
+INFO: Package database updated
+
+

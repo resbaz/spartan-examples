@@ -1,0 +1,26 @@
+#!/bin/bash
+## sbatch launching script                     March 2014  m.kuiper
+##  - A script to run a simple NAMD job on the vlsci BlueGene/Q cluster, Avoca.
+##  - using a restart script
+
+
+#SBATCH --nodes=4
+ntpn=8        # number of tasks per node: 
+ppn=8         # processors per node: 
+
+## 60 minute walltime:
+#SBATCH --time=1:0:0
+
+# add your account number here if you have multiple accounts. 
+##SBATCH --account=VLSCI    
+
+module load namd-xl-pami-smp/2.9
+
+# Note: newer versions of namd may exist.  Alter module accordingly. 
+
+
+# -Submit the job: ----------------------- 
+
+srun  --ntasks-per-node $ntpn  namd2 +ppn $ppn namd_1ubq_restart_example.conf > Namd_1ubq_restart_example_output.txt 
+
+

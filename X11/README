@@ -1,0 +1,28 @@
+X11 (more formally: X Window System Protocol, X Consortium Standard Version 11) is a protocol that allows for displaying graphical elements over an established network connection (for example, over ssh). 
+
+X11 is part of a broader set of Unix and Linux desktop standards, and implementations for other operating systems exist that allow for full emulation of unix-like desktop components. If an application supports X11 then the host system need not have a GUI available provided the client does.
+
+Different operating systems deal with the protocol differently, and some are easier to work with than others.
+
+* Installing
+
+Linux: As X11 is an integral part of the Linux desktop system, X11 is normally available by default on a modern Linux distribution.
+
+OS X: Versions prior to OS X Mountain Lion (10.8) came packaged with the Official X11.app, but subsequent versions instead rely on its open source, Apple supported successor XQuartz, which must be installed by the user prior to use. 
+
+Windows: There are several 3rd party X11 based solutions. Some examples include MobaXterm or Xming, links below. Users who are comfortable with Cygwin will likely be able to find other solutions also.
+Xming: https://sourceforge.net/projects/xming/
+MobaXterm: https://mobaxterm.mobatek.net/
+
+* Connecting: 
+
+Linux/OS X: simply using the '-X' flag when connecting with the ssh command should be sufficient to initiate an X11 connection, assuming appropriate libraries are present (e.g. XQuartz under OSX)
+
+Windows: Varies based on client. MobaXterm contains both an ssh client and X11 server and as such is the simplest to set up. Other combinations require more complex configuration as the ssh client and X11 server will need to reference each other to create a connection. 
+As a reasonably common example, let's consider PuTTY and Xming: With Xming installed and running, you'll need to launch PuTTY, open the Connection>SSH>X11 menu and ensure 'Enable X11 Forwarding' is ticked. This should be sufficient to allow you to initiate the connection with X handling enabled.
+
+* Using: 
+
+You have successfully connected to Spartan's login node with an active X11 display socket. You'll now need to let Slurm know about this using the --x11 flag. For example, the command `sinteractive --x11 --time=8:00:00 --ntasks 4` will request 4 CPUs for 8 hours and then connect your current session with X11 capabilities enabled.
+
+There are many potential pitfalls here. Please let us know if you are having significant issues getting this working. 

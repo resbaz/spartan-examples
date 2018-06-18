@@ -1,0 +1,47 @@
+# Spartan has many version of Python installed. The system Python can be determined by the following command.
+
+[lev@spartan ~]$ python --version
+Python 2.7.5
+
+# In addition to the system Python there are different versions with different compiler toolchains. across the v2 and v3 releases. To load a specific version, use the `module load` command. e.g.,
+
+[lev@spartan ~]$ module avail Python/
+[lev@spartan ~]$ module load Python/3.5.2-goolf-2015a
+
+# To determine the modules installed in a particular version run the following from within Python.
+
+import pip
+installed_packages = pip.get_installed_distributions()
+installed_packages_list = sorted(["%s==%s" % (i.key, i.version)
+     for i in installed_packages])
+print(installed_packages_list)
+
+# To add a new package added to a version of Python contact `hpc-support@unimelb.edu.au`, to have the package added. An alternative (less efficient but sometimes necessary) is to install the package locally. The following is one of several methods that could be used.
+
+[lev@spartan ~]$ pip install --user boto
+Downloading/unpacking boto
+...
+[lev@spartan ~]$ python
+Python 3.5.2 (default, Apr  3 2017, 11:51:05) 
+[GCC 4.9.2] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import boto;
+..
+>>> print(installed_packages_list)
+['argparse==1.2.1', 'boto==2.48.0'
+
+# Note however that different versions will typically use the same package version (i.e., the latest). 
+
+[lev@spartan ~]$ module load Python/2.7.11-goolf-2015a
+[lev@spartan ~]$ pip install --user boto
+Collecting boto
+  Downloading boto-2.48.0-py2.py3-none-any.whl (1.4MB)
+    100% |████████████████████████████████| 1.4MB 165kB/s 
+Installing collected packages: boto
+Successfully installed boto
+[lev@spartan ~]$ python
+Python 2.7.11 (default, Feb 17 2017, 16:25:19) 
+[GCC 4.9.2] on linux2
+..
+>>> print(installed_packages_list)
+['bitstring==3.1.3', 'blist==1.3.6', 'boto==2.48.0',

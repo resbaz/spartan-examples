@@ -1,0 +1,11 @@
+# This folder contains files for a sample, single-processor R job, which reads in the file tutorial.R, which itself calls the datasets w1.dat and trees91.csv. It is for leaf biomass of a pine tree in a high CO2 environment. With the `vanilla` option in the R command, it will create a PDF of the output. The job can be submitted with:
+
+sbatch Rsample.slurm
+
+# There is also a R-parallel script. Note this script does not work (yet). The library Rmpi has a few issues with OpenMI at the moment which we're working on. It does provide a good example of an error output for MPI :)
+
+sbatch r-parallel.slurm
+less xvalidate.out
+
+# There is also a LIBRARY file which describes how to access R extensions.
+

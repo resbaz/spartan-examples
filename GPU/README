@@ -1,0 +1,57 @@
+# This directory contains a sample Slurm scripts for the use of GPUs on Spartan. The main difference between submitting a standard Slurm job and a job that makes use of GPUs is additional paramters to the Slurm script. A user will need to specifiy that the GPU partition is being used and, in addition, a generic resource (GRES) resource request hhas been specified and the quantity of GPUs being requested.
+
+#SBATCH --partition gpu 
+#SBATCH --gres=gpu 
+
+# One can also select instead, if you have access:
+#
+#SBATCH --partition gpgpu
+
+# For example if you wish to access up four GPUs in a single job use:
+
+#SBATCH --gres=gpu:4.
+
+# However, note that this is for any type of GPGPU. However we have different GPGPUs installed. This will need to be specified.
+#
+# For example if you submit a job that says `--gres=gpu` for 1 GPU or `--gres=gpu:2` for 2 GPUs per task then that can be satisfied by either type
+# but if you need a specific type (say P100) then you need to submit with `--gres=gpu:p100` and if you need 2 per task then you would do `--gres=gpu:p100:2`.
+
+
+# Derived from:
+# https://stackoverflow.com/questions/7663343/simplest-possible-example-to-show-gpu-outperform-cpu-using-cuda
+
+# "GPUs are high bandwidth, high latency. Trying to get the GPU to beat a CPU for a nanosecond job (or even a millisecond or second job) is 
+# completely missing the point of doing GPU stuff. Below is some simple code, but to really appreciate the performance benefits of GPU, you'll 
+# need a big problem size to amortize the startup costs over... otherwise, it's meaningless. I can beat a Ferrari in a two foot race, simply 
+# because it take some time to turn the key, start the engine and push the pedal. That doesn't mean I'm faster than the Ferrari in any 
+# meaningful way."
+
+[lev@spartan ~]$ sinteractive --time=0:30:0 
+srun: job 1191791 queued and waiting for resources
+srun: job 1191791 has been allocated resources
+[lev@spartan-rc024 ~]$ module load CUDA/7.5.18-GCC-4.9.2
+
+# Note, must use -std=gnu99 or similar
+
+[lev@spartan-rc024 ~]$ gcc ferrari.c -std=gnu99 -o ferrari
+[lev@spartan-rc024 ~]$ time ./ferrari
+Enter an index: 33
+data[33] = -0.207107
+
+real	0m22.516s
+user	0m19.933s
+sys	0m0.004s
+
+[lev@spartan ~]$ sinteractive --time=0:30:0 --partition=gpu --gres=gpu:1
+srun: job 1191798 queued and waiting for resources
+srun: job 1191798 has been allocated resources
+[lev@spartan-gpu005 ~]$ nvcc ferrari.cu -o ferrari_gpu 
+[lev@spartan-gpu005 ~]$ time ./ferrari_gpu
+Enter an index: 33
+data[33] = 0.000000
+
+real	0m1.112s
+user	0m0.001s
+sys	0m0.015s
+[lev@spartan-gpu005 GPU]$
+ 

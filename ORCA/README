@@ -1,0 +1,10 @@
+# ORCA is a flexible, efficient and easy-to-use general purpose tool for quantum chemistry  with specific emphasis on spectroscopic properties of open-shell molecules. 
+
+
+# Include in your .bashrc the following line:
+
+orcapath='/usr/local/easybuild/software/ORCA/3_0_3-linux_x86-64-OpenMPI-1.6.5/'
+PATH=$PATH:/usr/local/easybuild/software/ORCA/3_0_3-linux_x86-64-OpenMPI-1.6.5/
+
+# To launch the sample job run `sbatch job`. Note that the file `orca.in` must also be modified to set the number of cores used.
+
