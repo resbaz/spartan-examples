@@ -1,0 +1,17 @@
+## DIGITS Spartan Example
+
+DIGITS is a deep-learning package from Nvidia with a web-based GUI. This example shows you how to run it on Spartan.
+
+1. As DIGITS makes use of GPUs, you'll first need access to our GPGPU partition. See: https://dashboard.hpc.unimelb.edu.au/gpu/
+
+2. Submit the job using `sbatch digits.slurm`. The example uses a whole node with 4 GPUs, with a wall time of 2 hours, but you can adjust to suit your needs.
+
+3. Check the job status using `squeue -u your_username`. Once it starts (which might take some time if the queue is busy), take note of the node your job is running on, e.g. `spartan-gpgpu025`
+
+4. As this is an interactive web application, we need to open a tunnel to the compute node so we can interact with it. You can do this with: `ssh -vNL 5000:spartan-gpgpu025:5000 your_username@spartan.hpc.unimelb.edu.au`
+
+5. Navigate to `localhost:5000` in your browser, and start playing with DIGITS. 
+
+N.B. DIGITS is running in a container, which means that the filesystem available to DIGITS will vary from that of the host (i.e. Spartan). Your home directory (i.e. `/home/your_username`) is mapped across however, so you can access your training data and models from there.
+
+
