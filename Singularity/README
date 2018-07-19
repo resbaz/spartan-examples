@@ -5,3 +5,5 @@ Containers allow you to have control over your operating environment, and to pac
 The demo loads Singularity, runs a simple command to print to standard output, and capture this to a file.
 
 Check out the Singularity docs for more information on use cases, connecting your data, and hardware access (including GPU).
+
+The repo at https://github.com/resbaz/spartan-examples doesn't include the actual Singularity image due to its large size, but it is available on Spartan at /usr/local/common/Singularity
