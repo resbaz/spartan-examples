@@ -1,3 +1,0 @@
-M=rand(10,10);
-k=svd(M);
-save -append demo-result.txt k;
